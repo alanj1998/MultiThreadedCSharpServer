@@ -1,0 +1,78 @@
+﻿<Window x:Class="ServerViewApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ServerViewApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="9*"/>
+            </Grid.RowDefinitions>
+            <Label Content="Requests" HorizontalAlignment="Left" Margin="0,0,0,0" FontSize="20px" Grid.Row="0" VerticalAlignment="Top" Width="396" />
+
+            <ListView Grid.Row="1" x:Name="requestsListView" ItemsSource="{Binding}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="2" Orientation="Vertical" Height="50">
+                            <DockPanel Margin="5">
+                                <TextBlock Text="{Binding Path=Method}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                <TextBlock Text="{Binding Path=Path}" VerticalAlignment="Center" Margin="5 0" DockPanel.Dock="Left"/>
+                                <TextBlock Text="{Binding Path=Time}" DockPanel.Dock="Right"></TextBlock>
+                            </DockPanel>
+                            <DockPanel>
+                                <Canvas Width="15" Height="15" Margin="5 0">
+                                    <Ellipse Width="15" Height="15" Fill="{Binding Path=Color}" Stroke="{Binding Path=Color}"></Ellipse>
+                                </Canvas>
+                                <TextBlock Text="{Binding Path=StatusCode}" VerticalAlignment="Center" Margin="5 0"/>
+                                <TextBlock Text="{Binding Path=StatusText}" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="Port" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="0,0,0,0" FontSize="20px" Grid.Row="0" VerticalAlignment="Top" Width="396" />
+                <TextBox x:Name="portTxtBox" Grid.Column="1"></TextBox>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Start" x:Name="startBtn" Click="startBtn_Click"></Button>
+                <Button Content="Stop" x:Name="stopBtn" Grid.Column="1" IsEnabled="False" Click="stopBtn_Click"></Button>
+            </Grid>
+
+            <DockPanel Grid.Row="2">
+                <Label Content="Logs" HorizontalAlignment="Left" Margin="0,0,0,0" FontSize="20px" Grid.Row="2" VerticalAlignment="Top" DockPanel.Dock="Left" Width="300"/>
+                <Button x:Name="btnSaveLogs" Content="Save Logs" DockPanel.Dock="Right" Click="btnSaveLogs_Click"></Button>
+            </DockPanel>
+            <ListView Grid.Row="3" x:Name="logListView"></ListView>
+        </Grid>
+
+    </Grid>
+</Window>
