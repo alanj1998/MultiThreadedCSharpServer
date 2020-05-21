@@ -8,6 +8,10 @@ namespace Multi_Thread_Web_Server
 {
     class Program
     {
+        /// <summary>
+        /// Incase the server is to be ran using a console, this interface is given.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             bool isCorrectAnswer = false;

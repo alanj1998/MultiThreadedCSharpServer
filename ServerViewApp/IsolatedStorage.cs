@@ -10,6 +10,11 @@ namespace ServerViewApp
 {
     class AppIsolatedStorage
     {
+        /// <summary>
+        /// This method saves the port number to the IsolatedStorage file of UserSettings.
+        /// It uses a UserStore.
+        /// </summary>
+        /// <param name="port"></param>
         public void SavePortToUser(string port)
         {
             using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForAssembly())
@@ -31,6 +36,11 @@ namespace ServerViewApp
             }
         }
 
+        /// <summary>
+        /// This method returns a port which has been previosuly saved if it exists.
+        /// Returns -1 if no port is found.
+        /// </summary>
+        /// <returns></returns>
         public int GetPortForUser()
         {
             using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForAssembly())
@@ -55,6 +65,10 @@ namespace ServerViewApp
             }
         }
 
+        /// <summary>
+        /// This method saves the logs to a file with the name saved as a timestamp.
+        /// </summary>
+        /// <param name="s"></param>
         public void SaveLogs(List<string> s)
         {
             using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForAssembly())

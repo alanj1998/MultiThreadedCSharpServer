@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace ServerViewApp
 {
+    /*
+     * ViewModel used for passing data between the Server and the UI 
+     * Returns different Color values depending on the request.
+     */
     public class RequestResponseViewModel
     {
         private int _statusCode;

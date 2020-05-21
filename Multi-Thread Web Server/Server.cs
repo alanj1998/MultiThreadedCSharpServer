@@ -11,6 +11,9 @@ using System.Collections.ObjectModel;
 
 namespace Multi_Thread_Web_Server
 {
+    /// <summary>
+    /// Server class which exposes a port interface to accept HTTP requests.
+    /// </summary>
     public class Server
     {
         private Threading _workers;
@@ -24,6 +27,16 @@ namespace Multi_Thread_Web_Server
         private Thread serverThread;
         private Router r = new Router();
 
+        /// <summary>
+        /// Upon creation of the server, it initialises the threading worker class,
+        /// and prepares two threads.
+        /// serverThread is used to take in requests.
+        /// requestHandlingThread is used for handling all the requests.
+        /// Currently it is set to allow the requestHandlingThread to finish.
+        /// </summary>
+        /// <param name="threads"></param>
+        /// <param name="PORT"></param>
+        /// <param name="console"></param>
         public Server(int threads, int PORT, IConsole console)
         {
             this._workers = new Threading(threads, SendBackResponse, console);
@@ -36,12 +49,18 @@ namespace Multi_Thread_Web_Server
             this.serverThread.Priority = ThreadPriority.AboveNormal;
         }
 
+        /// <summary>
+        /// Listen method starts the TCP listener and also starts the server thread which was created in the constructor.
+        /// </summary>
         public void Listen()
         {
             this._tcp.Start();
             this.serverThread.Start();
         }
 
+        /// <summary>
+        /// The Server Thread takes in the HTTP request and then passes it down to the RequestHandling Thread.
+        /// </summary>
         private void ServerThread()
         {
             while (this._tcp.IsListening)
@@ -54,6 +73,11 @@ namespace Multi_Thread_Web_Server
             }
         }
 
+        /// <summary>
+        /// The request handler thread, takes in the request context, applies it through the routing algorithm,
+        /// uses reflection to create the handler class and passes it down to the worker threads.
+        /// </summary>
+        /// <param name="context"></param>
         private void HandleRequest(object context)
         {
             HttpListenerContext ctx = context as HttpListenerContext;
@@ -85,6 +109,11 @@ namespace Multi_Thread_Web_Server
             this._workers.AddWork(id, r);
         }
 
+        /// <summary>
+        /// Callback method which returns the response to the user once the worker threads are finished with it.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="res"></param>
         private void SendBackResponse(int id, IResponse res)
         {
             Monitor.Enter(this.sockets);
@@ -115,10 +144,14 @@ namespace Multi_Thread_Web_Server
             }
         }
 
+        /// <summary>
+        /// Stop All Threads stops the server from working by aborting all threads.
+        /// </summary>
         public void StopAllThreads()
         {
             this._tcp.Stop();
             this.serverThread.Abort();
+            this.requestHandlingThread.Abort();
             this._workers._workerThreads.ForEach(thread =>
             {
                 thread.Abort();

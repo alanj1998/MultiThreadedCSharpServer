@@ -27,6 +27,13 @@ namespace ServerViewApp
         public ObservableCollection<RequestResponseViewModel> observable = new ObservableCollection<RequestResponseViewModel>();
         AppIsolatedStorage storage = new AppIsolatedStorage();
 
+        /// <summary>
+        /// Main Window Consturctor. 
+        /// It initialises the data context used for bindings of the request list view.
+        /// It also enables binding synchronization in order to allow bound object to be
+        /// modified by other threads.
+        /// On start it attempts to grab the port number from the user settings saved in isolated storage.
+        /// </summary>
         public MainWindow()
         {
             this.DataContext = observable;
@@ -50,6 +57,12 @@ namespace ServerViewApp
             }
         }
 
+        /// <summary>
+        /// Method used when the served requests observable in the server has changed.
+        /// It updated the observable bound to the GUI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ServedRequests_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             observable.Clear();
@@ -65,12 +78,18 @@ namespace ServerViewApp
             }
         }
 
+        /// <summary>
+        /// When the start button is clicked, the server is recreated and started.
+        /// The start btn performs a check to ensure that the port entered is an actual number and that it is over 1000.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
             string s = portTxtBox.Text;
-            int port;
+            int port = -1;
 
-            if(int.TryParse(s, out port))
+            if(int.TryParse(s, out port) && port > 1000)
             {
                 this.server = new Server(4, port, uiConsole);
                 server.servedRequests.CollectionChanged += ServedRequests_CollectionChanged;
@@ -84,6 +103,11 @@ namespace ServerViewApp
             }
         }
 
+        /// <summary>
+        /// When the stop button is clicked, the server threads are aborted and the buttons are reenabled.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void stopBtn_Click(object sender, RoutedEventArgs e)
         {
             this.server.StopAllThreads();
@@ -93,16 +117,31 @@ namespace ServerViewApp
             this.stopBtn.IsEnabled = false;
         }
 
+        /// <summary>
+        /// When the save logs button is clicked, a snapshot of all logs appearing on screen is saved
+        /// and they are persisted in the isolated storage.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSaveLogs_Click(object sender, RoutedEventArgs e)
         {
             List<string> logs = uiConsole.Logs.ToList();
-            storage.SaveLogs(logs);               
+            storage.SaveLogs(logs);
+            MessageBox.Show("Logs saved successfully!", "Logs Saved", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// When the window is being closed, the port number is saved to isolated storage and the cleanup
+        /// procedure is started.
+        /// In the end the application closes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             string str = portTxtBox.Text;
             storage.SavePortToUser(str);
+            server.StopAllThreads();
             Environment.Exit(0);
         }
     }

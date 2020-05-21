@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Multi_Thread_Web_Server
 {
+    /// <summary>
+    /// IRoute represents a route handler which is used to pass request parameters around.
+    /// It is inherited by all route handlers.
+    /// </summary>
     abstract public class IRoute
     {
         public Dictionary<string, string> Parameters { get; set; }
@@ -25,6 +29,9 @@ namespace Multi_Thread_Web_Server
         public abstract IResponse DoWork();
     }
 
+    /// <summary>
+    /// Simple model for passing the response around.
+    /// </summary>
     public class IResponse
     {
         public int StatusCode { get; set; }

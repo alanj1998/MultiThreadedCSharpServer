@@ -7,6 +7,9 @@ using System.Threading;
 
 namespace Multi_Thread_Web_Server
 {
+    /// <summary>
+    /// Console abstraction to allow different logging techinques.
+    /// </summary>
     public interface IConsole
     {
         void WriteLine(string text);
